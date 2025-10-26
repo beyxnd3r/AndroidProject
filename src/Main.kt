@@ -7,7 +7,7 @@ fun main() {
     val driver = Driver("Кузнецов Кузьма", 25, 1.8, Math.PI / 4) // 45 градусов
 
     val allEntities = humans + driver
-    val simulationTime = 10 // секунд
+    val simulationTime = 10
 
     val threads = allEntities.map { entity ->
         Thread {

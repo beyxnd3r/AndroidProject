@@ -8,7 +8,7 @@ class Driver(
     private val directionAngle: Double
 ) : Human(fullName, age, currentSpeed) {
 
-    // Прямолинейное движение
+
     override fun move() {
         x += currentSpeed * cos(directionAngle)
         y += currentSpeed * sin(directionAngle)

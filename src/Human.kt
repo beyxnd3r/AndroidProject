@@ -11,7 +11,7 @@ open class Human(
     override var y: Double = 0.0
     private val random = Random.Default
 
-    // Случайное движение — Random Walk
+
     override fun move() {
         val angle = random.nextDouble(0.0, 2 * Math.PI)
         x += currentSpeed * cos(angle)
