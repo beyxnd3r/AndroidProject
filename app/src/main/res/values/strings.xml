@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Calculator</string>
+    <string name="app_name">All in one App</string>
 
     <style name="CalcButtonDark">
         <item name="android:layout_width">0dp</item>
