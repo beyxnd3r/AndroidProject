@@ -1,5 +1,6 @@
 package com.example.androidproject
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -19,6 +20,14 @@ class CalculatorActivity : AppCompatActivity() {
 
         tvResult = findViewById(R.id.tvResult)
 
+
+        findViewById<Button>(R.id.btnBackMain).setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
+        }
+
         val numberButtons = listOf(
             R.id.btn0, R.id.btn1, R.id.btn2, R.id.btn3, R.id.btn4,
             R.id.btn5, R.id.btn6, R.id.btn7, R.id.btn8, R.id.btn9
@@ -34,7 +43,6 @@ class CalculatorActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnMinus).setOnClickListener { onOperatorClick("-") }
         findViewById<Button>(R.id.btnMultiply).setOnClickListener { onOperatorClick("*") }
         findViewById<Button>(R.id.btnDivide).setOnClickListener { onOperatorClick("/") }
-
         findViewById<Button>(R.id.btnClear).setOnClickListener { clear() }
         findViewById<Button>(R.id.btnDeleteOne).setOnClickListener { deleteOne() }
         findViewById<Button>(R.id.btnEquals).setOnClickListener { calculate() }
@@ -60,11 +68,7 @@ class CalculatorActivity : AppCompatActivity() {
 
     private fun onOperatorClick(op: String) {
         if (firstNumber.isEmpty()) return
-
-        if (secondNumber.isNotEmpty()) {
-            calculateIntermediate()
-        }
-
+        if (secondNumber.isNotEmpty()) calculateIntermediate()
         operator = op
         isResultShown = false
     }
@@ -85,18 +89,11 @@ class CalculatorActivity : AppCompatActivity() {
     }
 
     private fun onDotClick() {
-        if (operator.isEmpty()) {
-            if (!firstNumber.contains(".")) {
-                if (firstNumber.isEmpty()) firstNumber = "0"
-                firstNumber += "."
-                tvResult.text = firstNumber
-            }
-        } else {
-            if (!secondNumber.contains(".")) {
-                if (secondNumber.isEmpty()) secondNumber = "0"
-                secondNumber += "."
-                tvResult.text = secondNumber
-            }
+        val num = if (operator.isEmpty()) firstNumber else secondNumber
+        if (!num.contains(".")) {
+            val updated = if (num.isEmpty()) "0." else "$num."
+            if (operator.isEmpty()) firstNumber = updated else secondNumber = updated
+            tvResult.text = updated
         }
     }
 
@@ -124,7 +121,6 @@ class CalculatorActivity : AppCompatActivity() {
 
     private fun calculate() {
         if (firstNumber.isEmpty() || operator.isEmpty() || secondNumber.isEmpty()) return
-
         calculateIntermediate()
         operator = ""
         isResultShown = true

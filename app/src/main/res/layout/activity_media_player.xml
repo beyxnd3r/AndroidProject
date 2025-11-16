@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#1E1E1E"
+    android:padding="16dp">
+    <Button
+        android:id="@+id/btnBackMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="⬅ Назад в меню"
+        android:backgroundTint="#757575"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="8dp" />
+
+
+    <Button
+        android:id="@+id/btnChooseFolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📁 Выбрать папку с музыкой"
+        android:backgroundTint="#4CAF50"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:layout_marginBottom="12dp" />
+
+
+    <Button
+        android:id="@+id/btnShuffle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🔀 Перемешать треки"
+        android:backgroundTint="#2196F3"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp" />
+
+
+    <Button
+        android:id="@+id/btnSort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="⏱️ Сортировать по длительности"
+        android:backgroundTint="#9C27B0"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp" />
+
+
+    <ListView
+        android:id="@+id/lvTracks"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="#555"
+        android:dividerHeight="1dp"
+        android:listSelector="@android:color/holo_blue_light"
+        android:background="#2A2A2A"
+        android:scrollbars="vertical" />
+
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnPrev"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="⏮"
+            android:backgroundTint="#3A3A3A"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnPlay"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="▶"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:backgroundTint="#3A3A3A"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnPause"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="⏸"
+            android:layout_marginRight="6dp"
+            android:backgroundTint="#3A3A3A"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="⏭"
+            android:backgroundTint="#3A3A3A"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+</LinearLayout>
