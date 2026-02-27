@@ -19,9 +19,7 @@ import java.util.*
 class SocketsActivity : AppCompatActivity() {
 
     private lateinit var tvStatus: TextView
-    private lateinit var btnSendHello: Button
     private lateinit var btnSendLocation: Button
-    private lateinit var btnBack: Button
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -31,39 +29,41 @@ class SocketsActivity : AppCompatActivity() {
 
     private var isSendingLocation = false
 
+
+    private var zmqContext: ZContext? = null
+    private var zmqSocket: ZMQ.Socket? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sockets)
 
         tvStatus = findViewById(R.id.tvStatus)
-        btnSendHello = findViewById(R.id.btnSendHello)
         btnSendLocation = findViewById(R.id.btnSendLocation)
-        btnBack = findViewById(R.id.btnBackMain)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         requestPermissionsIfNeeded()
         initLocation()
-
-        btnSendHello.setOnClickListener {
-            Thread { sendHello() }.start()
-        }
+        connectZmq()
 
         btnSendLocation.setOnClickListener {
             if (!isSendingLocation) startLocationUpdates()
             else stopLocationUpdates()
         }
+    }
 
-        btnBack.setOnClickListener {
-            finish()
+    private fun connectZmq() {
+        try {
+            zmqContext = ZContext()
+            zmqSocket = zmqContext!!.createSocket(SocketType.REQ)
+            zmqSocket!!.connect("tcp://172.29.145.106:5555")
+        } catch (e: Exception) {
+            zmqSocket = null
         }
     }
 
-
-
     private fun requestPermissionsIfNeeded() {
-        if (
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
@@ -74,64 +74,26 @@ class SocketsActivity : AppCompatActivity() {
         }
     }
 
-
-
     private fun initLocation() {
         locationRequest = LocationRequest.create().apply {
             interval = 2000
             fastestInterval = 1000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            smallestDisplacement = 0f
         }
 
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(result: LocationResult) {
                 val location = result.lastLocation ?: return
-                Log.d("GPS", "lat=${location.latitude}, lon=${location.longitude}")
                 sendLocationToServer(location)
             }
         }
     }
 
-
-
-    private fun sendHello() {
-        val context = ZContext()
-        val socket = context.createSocket(SocketType.REQ)
-
-        try {
-            socket.connect("tcp://10.0.2.2:5555")
-
-            val json = """
-                {
-                  "type": "hello",
-                  "message": "Hello from Android!"
-                }
-            """.trimIndent()
-
-            socket.send(json.toByteArray(ZMQ.CHARSET))
-            val reply = socket.recv()
-
-            handler.post {
-                tvStatus.text = "Ответ сервера: ${String(reply)}"
-            }
-        } catch (e: Exception) {
-            handler.post {
-                tvStatus.text = "Ошибка Hello: ${e.message}"
-            }
-        } finally {
-            socket.close()
-            context.close()
-        }
-    }
-
-
-
     @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
         isSendingLocation = true
-        btnSendLocation.text = "Остановить отправку"
-        tvStatus.text = "Передача местоположения запущена"
+        btnSendLocation.text = "STOP"
+        tvStatus.text = "Sending location..."
 
         fusedLocationClient.requestLocationUpdates(
             locationRequest,
@@ -142,9 +104,8 @@ class SocketsActivity : AppCompatActivity() {
 
     private fun stopLocationUpdates() {
         isSendingLocation = false
-        btnSendLocation.text = "Отправить локацию на сервер"
-        tvStatus.text = "Передача местоположения остановлена"
-
+        btnSendLocation.text = "START"
+        tvStatus.text = "Stopped"
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
@@ -166,21 +127,19 @@ class SocketsActivity : AppCompatActivity() {
         """.trimIndent()
 
         Thread {
-            val context = ZContext()
-            val socket = context.createSocket(SocketType.REQ)
-
             try {
-                socket.connect("tcp://10.0.2.2:5555")
-                socket.send(json.toByteArray(ZMQ.CHARSET))
-                socket.recv()
+                if (zmqSocket == null) connectZmq()
+
+                zmqSocket?.send(json.toByteArray(ZMQ.CHARSET))
+                zmqSocket?.recv()
 
                 handler.post {
                     tvStatus.text =
-                        "Location:\n${location.latitude}, ${location.longitude}"
+                        "Lat: ${location.latitude}\nLon: ${location.longitude}"
                 }
-            } finally {
-                socket.close()
-                context.close()
+            } catch (e: Exception) {
+                zmqSocket?.close()
+                zmqSocket = null
             }
         }.start()
     }
@@ -188,5 +147,7 @@ class SocketsActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         stopLocationUpdates()
+        zmqSocket?.close()
+        zmqContext?.close()
     }
 }
