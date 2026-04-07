@@ -1,31 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:gravity="center"
-              android:background="#1E1E1E"
-              android:padding="32dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#1E1E1E"
+    android:padding="32dp">
 
     <Button
-            android:id="@+id/btnOpenCalculator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="🧮 Открыть калькулятор"
-            android:backgroundTint="#3A8DFF"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:layout_marginBottom="24dp"
-            android:padding="16dp"/>
+        android:id="@+id/btnOpenCalculator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🧮 Открыть калькулятор"
+        android:backgroundTint="#3A8DFF"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:layout_marginBottom="24dp"
+        android:padding="16dp"/>
 
     <Button
-            android:id="@+id/btnOpenMedia"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="🎵 Открыть медиаплеер"
-            android:backgroundTint="#4CAF50"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:padding="16dp"/>
+        android:id="@+id/btnOpenMedia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🎵 Открыть медиаплеер"
+        android:backgroundTint="#4CAF50"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:padding="16dp"/>
+    <Button
+        android:id="@+id/btnOpenLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📍 Определить местоположение"
+        android:backgroundTint="#9C27B0"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/btnZmq"
+        android:layout_width="match_parent"
+        android:layout_height="67dp"
+        android:layout_marginTop="16dp"
+        android:text="😸Сокеты"
+        android:textSize="20sp" />
+    <Button
+        android:id="@+id/btnNetworkService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📡 Сеть"
+        android:backgroundTint="#FF9800"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:layout_marginTop="16dp"/>
+
 
 </LinearLayout>

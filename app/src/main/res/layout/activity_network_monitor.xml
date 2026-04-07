@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="#1E1E1E"
+    android:padding="32dp">
+
+    <!-- Заголовок -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="📡 Network Monitor Service"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Статус сервиса -->
+    <TextView
+        android:id="@+id/tvServiceStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Service stopped"
+        android:textColor="#BBBBBB"
+        android:textSize="18sp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"/>
+
+    <!-- Кнопка запуска сервиса -->
+    <Button
+        android:id="@+id/btnStartService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🚀 Запустить фоновый сервис"
+        android:backgroundTint="#4CAF50"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp"
+        android:padding="16dp"/>
+
+    <!-- Кнопка остановки -->
+    <Button
+        android:id="@+id/btnStopService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🛑 Остановить сервис"
+        android:backgroundTint="#F44336"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:layout_marginBottom="24dp"
+        android:padding="16dp"/>
+
+    <!-- Информация -->
+    <TextView
+        android:id="@+id/tvInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Сервис собирает:\n• LTE / GSM / NR\n• GPS\n• Accuracy\n• Time\n\nДанные отправляются на backend"
+        android:textColor="#888888"
+        android:textSize="16sp"
+        android:gravity="center"/>
+
+</LinearLayout>
