@@ -162,7 +162,7 @@ class MediaPlayerActivity : AppCompatActivity() {
             override fun getView(position: Int, convertView: android.view.View?, parent: android.view.ViewGroup): android.view.View {
                 val view = super.getView(position, convertView, parent) as TextView
                 view.setSingleLine(false)
-                view.textSize = 16f
+                // view.textSize = 16f
                 view.setPadding(16, 12, 16, 12)
                 view.setTextColor(0xFFFFFFFF.toInt())
                 return view
@@ -256,22 +256,48 @@ class MediaPlayerActivity : AppCompatActivity() {
         if (trackUris.isEmpty()) return
 
         val retriever = MediaMetadataRetriever()
-        val zipped = trackUris.zip(trackNames).sortedBy {
+
+
+        val durations = MutableList(trackUris.size) { index ->
             try {
-                retriever.setDataSource(this, it.first)
-                retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: Long.MAX_VALUE
-            } catch (_: Exception) {
+                retriever.setDataSource(this, trackUris[index])
+                retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong()
+                    ?: Long.MAX_VALUE
+            } catch (e: Exception) {
                 Long.MAX_VALUE
             }
         }
+
         retriever.release()
 
-        trackUris = zipped.map { it.first }.toMutableList()
-        trackNames = zipped.map { it.second }.toMutableList()
+
+        for (i in 0 until durations.size - 1) {
+            for (j in 0 until durations.size - i - 1) {
+                if (durations[j] > durations[j + 1]) {
+
+
+                    val tempDur = durations[j]
+                    durations[j] = durations[j + 1]
+                    durations[j + 1] = tempDur
+
+
+                    val tempUri = trackUris[j]
+                    trackUris[j] = trackUris[j + 1]
+                    trackUris[j + 1] = tempUri
+
+
+                    val tempName = trackNames[j]
+                    trackNames[j] = trackNames[j + 1]
+                    trackNames[j + 1] = tempName
+                }
+            }
+        }
+
 
         updateListView()
         Toast.makeText(this, "⏱ Отсортировано по длительности", Toast.LENGTH_SHORT).show()
     }
+
 
     private fun updateSeekBar() {
         handler.postDelayed(object : Runnable {

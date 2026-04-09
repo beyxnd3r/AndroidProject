@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
+
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
         val btnCalc = findViewById<Button>(R.id.btnOpenCalculator)
         val btnMedia = findViewById<Button>(R.id.btnOpenMedia)
-
+        val btnLocation = findViewById<Button>(R.id.btnOpenLocation)
         btnCalc.setOnClickListener {
             val intent = Intent(this, CalculatorActivity::class.java)
             startActivity(intent)
@@ -29,6 +30,17 @@ class MainActivity : AppCompatActivity() {
         btnMedia.setOnClickListener {
             val intent = Intent(this, MediaPlayerActivity::class.java)
             startActivity(intent)
+        }
+
+        btnLocation.setOnClickListener {
+            val intent = Intent(this, LocationActivity::class.java)
+            startActivity(intent)
+        }
+        findViewById<Button>(R.id.btnZmq).setOnClickListener {
+            startActivity(Intent(this, SocketsActivity::class.java))
+        }
+        findViewById<Button>(R.id.btnNetworkService).setOnClickListener {
+            startActivity(Intent(this, NetworkMonitorActivity::class.java))
         }
     }
 }

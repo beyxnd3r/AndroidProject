@@ -8,7 +8,7 @@
     android:background="#1E1E1E"
     android:padding="32dp">
 
-    <!-- Заголовок -->
+
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
@@ -19,7 +19,7 @@
         android:textStyle="bold"
         android:layout_marginBottom="24dp"/>
 
-    <!-- Статус сервиса -->
+
     <TextView
         android:id="@+id/tvServiceStatus"
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
         android:layout_marginBottom="24dp"
         android:gravity="center"/>
 
-    <!-- Кнопка запуска сервиса -->
+
     <Button
         android:id="@+id/btnStartService"
         android:layout_width="match_parent"
@@ -42,7 +42,7 @@
         android:layout_marginBottom="16dp"
         android:padding="16dp"/>
 
-    <!-- Кнопка остановки -->
+
     <Button
         android:id="@+id/btnStopService"
         android:layout_width="match_parent"
@@ -54,7 +54,7 @@
         android:layout_marginBottom="24dp"
         android:padding="16dp"/>
 
-    <!-- Информация -->
+    
     <TextView
         android:id="@+id/tvInfo"
         android:layout_width="match_parent"

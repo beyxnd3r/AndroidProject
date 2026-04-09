@@ -1,18 +1,18 @@
 package com.example.androidproject
-import android.util.Log
+
 import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.os.*
 import android.telephony.*
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.*
 import org.json.JSONArray
 import org.json.JSONObject
 import org.zeromq.SocketType
 import org.zeromq.ZContext
-import org.zeromq.ZMQ
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -23,7 +23,8 @@ class NetworkMonitorService : Service() {
 
     private var currentLocation: Location? = null
 
-    private val serverAddress = "tcp://192.168.1.183:5556"
+    
+    private val serverAddress = "tcp://192.168.1.183:5555"
 
     override fun onCreate() {
         super.onCreate()
@@ -45,6 +46,12 @@ class NetworkMonitorService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
+
+
+
+    private fun safe(value: Int): Int {
+        return if (value == Int.MAX_VALUE) 0 else value
     }
 
 
@@ -78,7 +85,6 @@ class NetworkMonitorService : Service() {
         val mainJson = JSONObject()
         val networksArray = JSONArray()
 
-
         telephonyManager.allCellInfo?.forEach { cell ->
 
             when (cell) {
@@ -96,13 +102,13 @@ class NetworkMonitorService : Service() {
                     obj.put("pci", id.pci)
                     obj.put("tac", id.tac)
 
-                    obj.put("asu", sig.asuLevel)
-                    obj.put("cqi", sig.cqi)
-                    obj.put("rsrp", sig.rsrp)
-                    obj.put("rsrq", sig.rsrq)
-                    obj.put("rssi", sig.rssi)
-                    obj.put("rssnr", sig.rssnr)
-                    obj.put("timingAdvance", sig.timingAdvance)
+                    obj.put("asu", safe(sig.asuLevel))
+                    obj.put("cqi", safe(sig.cqi))
+                    obj.put("rsrp", safe(sig.rsrp))
+                    obj.put("rsrq", safe(sig.rsrq))
+                    obj.put("rssi", safe(sig.rssi))
+                    obj.put("rssnr", safe(sig.rssnr))
+                    obj.put("timingAdvance", safe(sig.timingAdvance))
 
                     networksArray.put(obj)
                 }
@@ -119,9 +125,9 @@ class NetworkMonitorService : Service() {
                     obj.put("mcc", id.mccString)
                     obj.put("mnc", id.mncString)
 
-                    obj.put("dbm", sig.dbm)
-                    obj.put("rssi", sig.rssi)
-                    obj.put("timingAdvance", sig.timingAdvance)
+                    obj.put("dbm", safe(sig.dbm))
+                    obj.put("rssi", safe(sig.rssi))
+                    obj.put("timingAdvance", safe(sig.timingAdvance))
 
                     networksArray.put(obj)
                 }
@@ -139,15 +145,16 @@ class NetworkMonitorService : Service() {
                     obj.put("mnc", id.mncString)
                     obj.put("nrarfcn", id.nrarfcn)
 
-                    obj.put("ssRsrp", sig.ssRsrp)
-                    obj.put("ssRsrq", sig.ssRsrq)
-                    obj.put("ssSinr", sig.ssSinr)
+                    obj.put("ssRsrp", safe(sig.ssRsrp))
+                    obj.put("ssRsrq", safe(sig.ssRsrq))
+
+
+                    obj.put("rssnr", safe(sig.ssSinr))
 
                     networksArray.put(obj)
                 }
             }
         }
-
 
         currentLocation?.let {
             mainJson.put("latitude", it.latitude)
@@ -174,23 +181,27 @@ class NetworkMonitorService : Service() {
                 val context = ZContext()
                 val socket = context.createSocket(SocketType.REQ)
 
-                socket.connect("tcp://192.168.1.183:5556")
+                socket.connect(serverAddress)
 
-                val sent = socket.send(json.toString(), 0)
+                val message = json.toString()
 
-                if (sent) {
-                    val reply = socket.recvStr()
-                    println("Server reply: $reply")
-                }
+                Log.d("ZMQ", "Sending: $message")
+
+                socket.send(message)
+
+                val reply = socket.recvStr()
+
+                Log.d("ZMQ", "Reply: $reply")
 
                 socket.close()
                 context.close()
 
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e("ZMQ", "Error: ${e.message}")
             }
         }.start()
     }
+
 
 
     private fun startForegroundNotification() {
